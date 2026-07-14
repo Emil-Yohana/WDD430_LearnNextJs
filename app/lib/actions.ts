@@ -4,7 +4,6 @@ import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import postgres from 'postgres';
-import { UpdateInvoice } from '../ui/invoices/buttons';
 import { signIn } from '@/auth';
 import { AuthError } from 'next-auth';
 
@@ -22,6 +21,7 @@ const FormSchema = z.object({
 });
  
 const CreateInvoice = FormSchema.omit({ id: true, date: true });
+const UpdateInvoiceSchema = FormSchema.omit({ id: true, date: true });
 
 export type State = {
   errors?: {
@@ -72,7 +72,7 @@ export async function updateInvoice(
   prevState: State,
   formData: FormData,
 ) {
-  const validatedFields = UpdateInvoice.safeParse({
+  const validatedFields = UpdateInvoiceSchema.safeParse({
     customerId: formData.get('customerId'),
     amount: formData.get('amount'),
     status: formData.get('status'),
